@@ -7,6 +7,7 @@
 3. Android TV ListView条目焦点控制，任意控制条目的样式
 
 ##效果图
+
 <img src="https://github.com/kellysong/Wifi-master/blob/master/screenshot/img_1.png" width="30%" alt="加载中..."/>
 <img src="https://github.com/kellysong/Wifi-master/blob/master/screenshot/img_2.png" width="30%" alt="加载中..."/>
 <img src="https://github.com/kellysong/Wifi-master/blob/master/screenshot/img_3.png" width="30%" alt="加载中..."/>

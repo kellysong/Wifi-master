@@ -117,17 +117,21 @@ public class WifiApActivity extends AppCompatActivity implements View.OnClickLis
 
     private void init() {
         mHasPermission = true;
-        if (WifiApUtils.isApOn(this)) {
-            mSwitch.setChecked(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1){
+            hotspotReceiver = new HotspotReceiver();
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction("android.net.wifi.WIFI_AP_STATE_CHANGED");
+            registerReceiver(hotspotReceiver, intentFilter);
+        }else {
+            if (WifiApUtils.isApOn(this)) {
+                mSwitch.setChecked(true);
+            }
         }
         String ssid = WifiApUtils.getSsid(this);
         String pwd = WifiApUtils.getPwd(this);
         mSsid.setText(ssid);
         mPwd.setText(pwd);
-        hotspotReceiver = new HotspotReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("android.net.wifi.WIFI_AP_STATE_CHANGED");
-        registerReceiver(hotspotReceiver, intentFilter);
+
     }
 
     private void requestPermission() {
@@ -165,7 +169,7 @@ public class WifiApActivity extends AppCompatActivity implements View.OnClickLis
                     return;
                 }
                 if (isChecked) {
-                    openAp();
+                    openAp(true);
                 } else {
                     WifiApUtils.closeWifiAp(WifiApActivity.this);
                 }
@@ -175,7 +179,7 @@ public class WifiApActivity extends AppCompatActivity implements View.OnClickLis
         mRecover.setOnClickListener(this);
     }
 
-    private void openAp() {
+    private void openAp(boolean flag) {
         if (!mHasPermission){
             Toast.makeText(WifiApActivity.this, "权限不足", Toast.LENGTH_LONG).show();
             return;
@@ -190,11 +194,17 @@ public class WifiApActivity extends AppCompatActivity implements View.OnClickLis
             Toast.makeText(WifiApActivity.this, "密码至少8位", Toast.LENGTH_LONG).show();
             return;
         }
-        if (mSwitch.isChecked()) {//处于热点开启状态，直接生效
+        if (flag) {
             boolean openWifiAp = WifiApUtils.openWifiAp(this, ssid, pwd);
             Log.i("SIMPLE_LOGGER","热点开启："+openWifiAp);
-        } else {//保存账号密码
-            WifiApUtils.saveApInfo(this, ssid, pwd);
+        } else {
+            if (mSwitch.isChecked()){//处于热点开启状态，直接生效
+                boolean openWifiAp = WifiApUtils.openWifiAp(this, ssid, pwd);
+                Log.i("SIMPLE_LOGGER","热点开启："+openWifiAp);
+            }else {//保存账号密码
+                WifiApUtils.saveApInfo(this, ssid, pwd);
+            }
+
         }
 
     }
@@ -205,7 +215,7 @@ public class WifiApActivity extends AppCompatActivity implements View.OnClickLis
         switch (v.getId()) {
             case R.id.btn_save:
                 //保存设置
-                openAp();
+                openAp(false);
                 break;
             case R.id.btn_recover:
                 //恢复默认

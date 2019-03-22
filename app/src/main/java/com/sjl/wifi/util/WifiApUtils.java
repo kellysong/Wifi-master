@@ -52,7 +52,7 @@ public class WifiApUtils {
      * @param password 密码
      * @return
      */
-    public static boolean openWifiAp(final Context context, String ssid, String password) {
+    public static boolean openWifiAp(Context context, String ssid, String password) {
         return setWifiApEnabled(context, ssid, password, true);
     }
 
@@ -62,7 +62,7 @@ public class WifiApUtils {
      * @param context 上下文
      * @return
      */
-    public static boolean closeWifiAp(final Context context) {
+    public static boolean closeWifiAp(Context context) {
         return setWifiApEnabled(context, null, null, false);
     }
 

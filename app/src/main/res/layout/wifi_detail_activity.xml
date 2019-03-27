@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <TextView
@@ -93,7 +94,9 @@
             android:id="@+id/btn_delete_net"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="删除网络(忘记密码)" />
-
+            android:layout_margin="5dp"
+            android:background="@drawable/btn_blue_bg"
+            android:textColor="@color/white"
+            android:text="忘记密码" />
     </LinearLayout>
 </LinearLayout>

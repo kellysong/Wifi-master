@@ -15,8 +15,8 @@
             android:id="@+id/tv_wifi_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="关闭" />
+            android:text="关闭"
+            android:textSize="16sp" />
 
         <Switch
             android:id="@+id/sw_wifi"
@@ -64,13 +64,23 @@
 
         </android.support.v7.widget.RecyclerView>
 
-        <Button
-            android:id="@+id/btn_refresh"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_alignParentBottom="true"
-            android:enabled="false"
-            android:text="刷新" />
+            android:background="@color/gray1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+
+            <ImageButton
+                android:id="@+id/btn_refresh"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:background="@mipmap/icon_refresh"
+                android:enabled="false" />
+        </LinearLayout>
     </RelativeLayout>
 
 

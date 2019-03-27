@@ -23,3 +23,12 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+project('app') { // app是你工程的名字，配置只对当前工程有效
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            // 注意修改 jar 包的路径，替换 app/libs/android.jar，其他部分不要改
+            // Xbootclasspath/p:是 Java 编译的寻址优先设置，先找缺省路径还是全路径
+            options.compilerArgs.add('-Xbootclasspath/p:app/libs/android.jar')
+        }
+    }
+}

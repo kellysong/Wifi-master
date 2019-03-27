@@ -18,8 +18,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -65,7 +65,7 @@ public class WifiListActivity extends AppCompatActivity {
 
     private Switch mSwitch;
     private TextView mWifiSwitchMsg;
-    private Button mRefresh;
+    private ImageButton mRefresh;
     private WifiHelper mWifiHelper;
     private boolean is_password_error;
     private static final List<String> ignoreSsid = Arrays.asList("0x", "<unknown ssid>");
@@ -96,6 +96,7 @@ public class WifiListActivity extends AppCompatActivity {
                     mWifiHelper.openWifi();
                     mWifiSwitchMsg.setText("开启");
                     mRefresh.setEnabled(true);
+                    mRefresh.getBackground().setAlpha(255);//不透明
                     mWifiHelper.startScan();//扫描
                 } else {
                     mWifiHelper.closeWifi();
@@ -103,6 +104,7 @@ public class WifiListActivity extends AppCompatActivity {
                     realWifiList.clear();
                     adapter.notifyDataSetChanged();
                     mRefresh.setEnabled(false);
+                    mRefresh.getBackground().setAlpha(125);//半透明
                 }
             }
         });
@@ -110,8 +112,8 @@ public class WifiListActivity extends AppCompatActivity {
         mRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mWifiHelper.startScan();//扫描
 
+                mWifiHelper.startScan();//扫描
             }
         });
 
@@ -137,6 +139,20 @@ public class WifiListActivity extends AppCompatActivity {
     }
 
 
+
+    public void setSwitchState(boolean switchState) {
+        if (!switchState){
+            mSwitch.setChecked(false);
+            mWifiSwitchMsg.setText("关闭");
+        }else {
+            mSwitch.setChecked(true);
+            mWifiSwitchMsg.setText("开启");
+        }
+    }
+
+
+
+
     private void initData() {
         mWifiHelper = new WifiHelper(this);
         adapter = new WifiListAdapter(this, realWifiList);
@@ -151,6 +167,10 @@ public class WifiListActivity extends AppCompatActivity {
             mRefresh.setEnabled(true);
             mWifiHelper.startScan();//扫描，3秒左右返回数据
         } else {
+            mSwitch.setChecked(false);
+            mWifiSwitchMsg.setText("关闭");
+            mRefresh.setEnabled(false);
+            mRefresh.getBackground().setAlpha(125);//半透明
             Toast.makeText(WifiListActivity.this, "WIFI处于关闭状态", Toast.LENGTH_SHORT).show();
         }
     }
@@ -219,6 +239,7 @@ public class WifiListActivity extends AppCompatActivity {
         this.unregisterReceiver(wifiReceiver);
     }
 
+
     /**
      * 监听wifi状态
      * 当都没有可用连接，系统会连接已经保存的网路
@@ -242,8 +263,7 @@ public class WifiListActivity extends AppCompatActivity {
                      */
                     case WifiManager.WIFI_STATE_DISABLED: {
                         Log.d(TAG, "已经关闭");
-                        mSwitch.setChecked(false);
-                        mWifiSwitchMsg.setText("关闭");
+                        setSwitchState(false);
                         break;
                     }
                     case WifiManager.WIFI_STATE_DISABLING: {
@@ -252,8 +272,7 @@ public class WifiListActivity extends AppCompatActivity {
                     }
                     case WifiManager.WIFI_STATE_ENABLED: {
                         Log.d(TAG, "已经打开");
-                        mSwitch.setChecked(true);
-                        mWifiSwitchMsg.setText("开启");
+                        setSwitchState(true);
                         break;
                     }
                     case WifiManager.WIFI_STATE_ENABLING: {
